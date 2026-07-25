@@ -1,4 +1,13 @@
-function PizzaBlock({ title, price, imageUrl }) {
+import { useState } from 'react';
+
+function PizzaBlock({ title, price, imageUrl, onClickAdd, id }) {
+  const [pizzaCount, setPizzaCount] = useState(0);
+
+  const handleClickPlus = () => {
+    onClickAdd({ id, title, price, imageUrl });
+    setPizzaCount(pizzaCount + 1);
+  };
+
   return (
     <div className="pizza-block">
       <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
@@ -16,7 +25,7 @@ function PizzaBlock({ title, price, imageUrl }) {
       </div>
       <div className="pizza-block__bottom">
         <div className="pizza-block__price">от {price} ₽</div>
-        <button type="button" className="button button--outline button--add">
+        <button onClick={handleClickPlus} type="button" className="button button--outline button--add">
           <svg
             width="12"
             height="12"
@@ -29,7 +38,7 @@ function PizzaBlock({ title, price, imageUrl }) {
             />
           </svg>
           <span>Добавить</span>
-          <i>2</i>
+          <i>{pizzaCount}</i>
         </button>
       </div>
     </div>
