@@ -13,6 +13,8 @@ const data = [
     types: [0, 1],
     sizes: [26, 30, 40],
     price: 395,
+    category: 0,
+    rating: 4,
   },
   {
     id: 1,
@@ -21,6 +23,8 @@ const data = [
     types: [0, 1],
     sizes: [26],
     price: 450,
+    category: 1,
+    rating: 5,
   },
   {
     id: 2,
@@ -29,6 +33,8 @@ const data = [
     types: [0],
     sizes: [30],
     price: 290,
+    category: 2,
+    rating: 3,
   },
   {
     id: 3,
@@ -37,6 +43,8 @@ const data = [
     types: [0, 1],
     sizes: [26, 30, 40],
     price: 385,
+    category: 3,
+    rating: 5,
   },
 ];
 
@@ -64,16 +72,8 @@ function App() {
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
-            {data.map((obj, index) => (
-              <PizzaBlock
-                id={obj.id}
-                key={index}
-                title={obj.title}
-                price={obj.price}
-                imageUrl={obj.imageUrl}
-                onClickAdd={onClickAdd}
-                pizzaItem={pizzaItem}
-              />
+            {data.map((obj) => (
+              <PizzaBlock key={obj.id} {...obj} />
             ))}
           </div>
         </div>

@@ -221,6 +221,11 @@ body {
   font-size: 14px;
   user-select: none;
   border-radius: 5px;
+
+  &:hover{
+      background: #e4e4e4;
+      transition: all 0.4s;
+  }
 }
 
 .pizza-block__selector li.active {
