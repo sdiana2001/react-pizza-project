@@ -54,10 +54,10 @@ function App() {
    console.log(pizzaItem);
 
 
-  const onClickAdd=(obj)=>{
-   setPizzaItem((prev)=> [...prev, obj])
-   console.log(pizzaItem);
-  }
+  // const onClickAdd=(obj)=>{
+  //  setPizzaItem((prev)=> [...prev, obj])
+  //  console.log(pizzaItem);
+  // }
 
  
 
