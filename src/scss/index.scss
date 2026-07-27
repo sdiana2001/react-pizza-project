@@ -7,6 +7,11 @@
   -webkit-font-smoothing: antialiased;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   background-color: #ffdf8c;
   padding: 50px 0;
@@ -66,9 +71,7 @@ body {
   margin-right: 8px;
 }
 
-/* ====================
-   CONTENT & TOP FILTERS
-   ==================== */
+/*     CONTENT & TOP FILTERS    */
 .content {
   padding: 40px 0;
 }
@@ -167,9 +170,7 @@ body {
   color: #fe5f1e;
 }
 
-/* ====================
-   PIZZA GRID & CARDS
-   ==================== */
+/*  PIZZA GRID & CARDS */
 .content__items {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -296,7 +297,7 @@ body {
   color: #fe5f1e;
 }
 
-/* Адаптив под маленькие экраны */
+
 @media (max-width: 1200px) {
   .content__items {
     grid-template-columns: repeat(3, 1fr);
