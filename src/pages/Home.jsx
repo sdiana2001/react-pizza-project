@@ -5,12 +5,30 @@ import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
+  const sortList = ['rating', 'price', 'title'];
+
+
 const Home = () => {
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [categoryType, setCategoryType] = useState(0);
+  const [sortType, setSortType] = useState(0);
+
+
+  const onChangeCategory = (id) => {
+    setCategoryType(id);
+    setIsLoading(true); // Включаем скелетон СРАЗУ при клике
+  };
+
 
   useEffect(() => {
-    fetch('https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item')
+    // Если categoryType > 0, добавляем фильтр. Если 0 ("Все"), запрос идет без фильтра
+    const categoryQuery = categoryType > 0 ? `category=${categoryType}` : '';
+    const sortQuery = `sortBy=${sortList[sortType]}&order=desc`;
+
+    const queryString = [categoryQuery, sortQuery].filter(Boolean).join('&');
+
+    fetch(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`)
       .then((res) => {
         return res.json();
       })
@@ -18,14 +36,13 @@ const Home = () => {
         setPizzaItem(res);
         setIsLoading(false);
       });
-      window.scrollTo(0, 0); //чтобы верх уходил после перезагрузки
-  }, []);
+  }, [categoryType, sortType]);
 
   return (
     <>
       <div className="content__top">
-        <Categories />
-        <Sort />
+        <Categories value={categoryType} onClickCategory={onChangeCategory} />
+        <Sort value={sortType} onClickSort={(i) => setSortType(i)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">

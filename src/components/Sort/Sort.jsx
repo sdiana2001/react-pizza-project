@@ -1,18 +1,15 @@
 import { useState } from "react";
 
-function Sort() {
-const[open, setOpen] = useState(false);
-const [isChanged, setIsChanged] = useState(0);
+function Sort({ value, onClickSort }) {
+  const [open, setOpen] = useState(false);
 
+  const popup = ['популярности', 'цене', 'алфавиту'];
+  const sortName = popup[value];
 
-const popup = ['популярности', 'цене', 'алфавиту'];
-const sortName = popup[isChanged];
-
-
-const changedFilter = (index) =>{
-setIsChanged(index);
-setOpen(false);
-}
+  const changedFilter = (index) => {
+    onClickSort(index);
+    setOpen(false);
+  };
 
   return (
     <div className="sort">
@@ -38,7 +35,7 @@ setOpen(false);
               <li
                 key={item}
                 onClick={() => changedFilter(index)}
-                className={isChanged === index ? 'active' : ''}>
+                className={value === index ? 'active' : ''}>
                 {item}
               </li>
             ))}
