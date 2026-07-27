@@ -18,6 +18,7 @@ const Home = () => {
         setPizzaItem(res);
         setIsLoading(false);
       });
+      window.scrollTo(0, 0); //чтобы верх уходил после перезагрузки
   }, []);
 
   return (
