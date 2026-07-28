@@ -8,17 +8,20 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
   const sortList = ['rating', 'price', 'title'];
 
 
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryType, setCategoryType] = useState(0);
   const [sortType, setSortType] = useState(0);
 
-
   const onChangeCategory = (id) => {
     setCategoryType(id);
     setIsLoading(true); // Включаем скелетон СРАЗУ при клике
   };
+
+  const pizzas = pizzaItems
+    .filter((obj) => obj.title.toLowerCase().includes(searchValue || '').toLowerCase())
+    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Home = () => {
       <div className="content__items">
         {isLoading
           ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
-          : pizzaItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+          : pizzas}
       </div>
     </>
   );

@@ -5,20 +5,21 @@ import Home from './pages/Home';
 import Cart from './components/Cart/Cart';
 import NotFound from './pages/NotFound';
 import './scss/index.scss';
+import { useState } from 'react';
 
 function App() {
-  // const onClickAdd=(obj)=>{
-  //  setPizzaItem((prev)=> [...prev, obj])
-  //  console.log(pizzaItem);
-  // }
+ const [searchValue, setSearchValue] = useState('');
 
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <div className="content">
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={<Home searchValue={searchValue} setSearchValue={setSearchValue} />}
+            />
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
