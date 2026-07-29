@@ -1,7 +1,14 @@
 import styles from './Search.module.scss';
+import { useRef } from 'react';
 
 const Search = ({ searchValue, setSearchValue }) => {
-  console.log(searchValue);
+  const inputRef = useRef(null); // Создаём реф для инпута
+
+  const handleClear = () => {
+    setSearchValue(''); // 1. Очищаем значение
+    inputRef.current?.focus(); // 2. Возвращаем фокус в инпут
+  };
+
   return (
     <div className={styles.root}>
       <svg
@@ -20,7 +27,12 @@ const Search = ({ searchValue, setSearchValue }) => {
         placeholder="Поиск пиццы..."
       />
       {searchValue && (
-        <img className={styles.inputCross} src="/src/assets/icons/cross.svg" alt="cross" />
+        <img
+          className={styles.inputCross}
+          onClick={handleClear}
+          src="/src/assets/icons/cross.svg"
+          alt="cross"
+        />
       )}
     </div>
   );

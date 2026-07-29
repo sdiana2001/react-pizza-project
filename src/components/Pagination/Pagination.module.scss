@@ -1,0 +1,41 @@
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  margin-top: 40px;
+  padding: 0;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #fe5f1e;
+  border-radius: 30px;
+  color: #fe5f1e;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease-in-out;
+
+  &:hover:not(.disabled) {
+    background-color: #fe5f1e;
+    color: #fff;
+  }
+
+  &.active {
+    background-color: #fe5f1e;
+    color: #fff;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+    border-color: #ccc;
+    color: #ccc;
+  }
+}

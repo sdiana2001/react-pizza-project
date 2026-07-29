@@ -4,55 +4,80 @@ import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
+import { Pagination } from '../components/Pagination';
 
-  const sortList = ['rating', 'price', 'title'];
-
+const sortList = ['rating', 'price', 'title'];
+const PIZZAS_LIMIT = 8; 
 
 const Home = ({ searchValue }) => {
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryType, setCategoryType] = useState(0);
   const [sortType, setSortType] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const onChangeCategory = (id) => {
     setCategoryType(id);
-    setIsLoading(true); // Включаем скелетон СРАЗУ при клике
+    setIsLoading(true);
+    setCurrentPage(1); // При смене категории сбрасываем на 1 страницу
   };
 
-  const pizzas = pizzaItems
-    .filter((obj) => obj.title.toLowerCase().includes(searchValue || '').toLowerCase())
-    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
-
+  const onChangeSort = (id) => {
+    setSortType(id);
+    setIsLoading(true);
+  };
 
   useEffect(() => {
-    // Если categoryType > 0, добавляем фильтр. Если 0 ("Все"), запрос идет без фильтра
     const categoryQuery = categoryType > 0 ? `category=${categoryType}` : '';
     const sortQuery = `sortBy=${sortList[sortType]}&order=desc`;
-
     const queryString = [categoryQuery, sortQuery].filter(Boolean).join('&');
 
     fetch(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`)
+      .then((res) => res.json())
       .then((res) => {
-        return res.json();
+        setPizzaItem(Array.isArray(res) ? res : []);
+        setIsLoading(false);
       })
-      .then((res) => {
-        setPizzaItem(res);
+      .catch(() => {
+        setPizzaItem([]);
         setIsLoading(false);
       });
   }, [categoryType, sortType]);
+
+  // 1. Фильтруем по полю поиска
+  const filteredPizzas = pizzaItems.filter((obj) =>
+    obj.title.toLowerCase().includes((searchValue || '').toLowerCase()),
+  );
+
+  // 2. Считаем динамическое количество страниц
+  const totalPages = Math.ceil(filteredPizzas.length / PIZZAS_LIMIT);
+
+  // 3. Нарезаем ровно по 4 пиццы на страницу
+  const startIndex = (currentPage - 1) * PIZZAS_LIMIT;
+  const endIndex = startIndex + PIZZAS_LIMIT;
+  const currentPagePizzas = filteredPizzas.slice(startIndex, endIndex);
+
+  // 4. Формируем JSX только один раз
+  const pizzas = currentPagePizzas.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
   return (
     <>
       <div className="content__top">
         <Categories value={categoryType} onClickCategory={onChangeCategory} />
-        <Sort value={sortType} onClickSort={(i) => setSortType(i)} />
+        <Sort value={sortType} onClickSort={onChangeSort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
         {isLoading
-          ? [...new Array(6)].map((_, index) => <Skeleton key={index} />)
+          ? [...new Array(PIZZAS_LIMIT)].map((_, index) => <Skeleton key={index} />)
           : pizzas}
       </div>
+
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onChangePage={(number) => setCurrentPage(number)}
+      />
     </>
   );
 };
