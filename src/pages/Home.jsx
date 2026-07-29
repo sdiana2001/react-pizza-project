@@ -30,7 +30,9 @@ const Home = ({ searchValue }) => {
   useEffect(() => {
     const categoryQuery = categoryType > 0 ? `category=${categoryType}` : '';
     const sortQuery = `sortBy=${sortList[sortType]}&order=desc`;
-    const queryString = [categoryQuery, sortQuery].filter(Boolean).join('&');
+    const searchProperty = searchValue ? `title=${searchValue}` : '';
+
+    const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
     fetch(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`)
       .then((res) => res.json())
@@ -42,7 +44,7 @@ const Home = ({ searchValue }) => {
         setPizzaItem([]);
         setIsLoading(false);
       });
-  }, [categoryType, sortType]);
+  }, [categoryType, sortType, searchValue]);
 
   // 1. Фильтруем по полю поиска
   const filteredPizzas = pizzaItems.filter((obj) =>
@@ -56,8 +58,7 @@ const Home = ({ searchValue }) => {
   const startIndex = (currentPage - 1) * PIZZAS_LIMIT;
   const endIndex = startIndex + PIZZAS_LIMIT;
   const currentPagePizzas = filteredPizzas.slice(startIndex, endIndex);
-
-  // 4. Формируем JSX только один раз
+  
   const pizzas = currentPagePizzas.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
   return (

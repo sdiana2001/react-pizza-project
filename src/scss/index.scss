@@ -194,6 +194,10 @@ body {
   font-weight: 900;
   letter-spacing: 1%;
   margin-bottom: 20px;
+  min-height: 48px; 
+  display: flex;    
+  align-items: center; 
+  justify-content: center; 
 }
 
 .pizza-block__selector {
