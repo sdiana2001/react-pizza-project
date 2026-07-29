@@ -1,12 +1,16 @@
+import { useContext } from 'react';
 import styles from './Search.module.scss';
-import { useRef } from 'react';
+import { SearchContext } from '../../App';
 
-const Search = ({ searchValue, setSearchValue }) => {
-  const inputRef = useRef(null); // Создаём реф для инпута
+
+
+
+const Search = () => {
+const { searchValue, setSearchValue } = useContext(SearchContext);
+
 
   const handleClear = () => {
     setSearchValue(''); // 1. Очищаем значение
-    inputRef.current?.focus(); // 2. Возвращаем фокус в инпут
   };
 
   return (

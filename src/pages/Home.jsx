@@ -1,20 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import { Pagination } from '../components/Pagination';
+import { SearchContext } from '../App';
 
 const sortList = ['rating', 'price', 'title'];
 const PIZZAS_LIMIT = 8; 
 
-const Home = ({ searchValue }) => {
+const Home = () => {
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryType, setCategoryType] = useState(0);
   const [sortType, setSortType] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { searchValue } = useContext(SearchContext);
 
   const onChangeCategory = (id) => {
     setCategoryType(id);
@@ -58,7 +61,7 @@ const Home = ({ searchValue }) => {
   const startIndex = (currentPage - 1) * PIZZAS_LIMIT;
   const endIndex = startIndex + PIZZAS_LIMIT;
   const currentPagePizzas = filteredPizzas.slice(startIndex, endIndex);
-  
+
   const pizzas = currentPagePizzas.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
   return (
