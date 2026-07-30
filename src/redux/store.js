@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import  counterSlice from './slices/counterSlice';
+import filterSlice  from './slices/filterSlice';
+
 
 
 export const store = configureStore({
+  // reducer- это список функций-инструкций. Каждая функция отвечает за одно конкретное действие над данными.
   reducer: {
-   counter: counterSlice,
+    filterSlice
   },
 });
-
 
 // добавление слайсов в хранилище(через редуктор)

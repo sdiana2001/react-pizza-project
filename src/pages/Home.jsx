@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCategoryId, setSortId } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
 import Sort from '../components/Sort';
@@ -11,28 +13,36 @@ const sortList = ['rating', 'price', 'title'];
 const PIZZAS_LIMIT = 8; 
 
 const Home = () => {
+ const categoryId = useSelector((state) => state.filterSlice.categoryId);
+ const sortId = useSelector((state) => state.filterSlice.sort);
+ const dispatch = useDispatch();
+
+
+
+
+
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [categoryType, setCategoryType] = useState(0);
-  const [sortType, setSortType] = useState(0);
+  // const [categoryType, setCategoryType] = useState(0);
+  // const [sortType, setSortType] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { searchValue } = useContext(SearchContext);
 
   const onChangeCategory = (id) => {
-    setCategoryType(id);
+    dispatch(setCategoryId(id));
     setIsLoading(true);
     setCurrentPage(1); // При смене категории сбрасываем на 1 страницу
   };
 
   const onChangeSort = (id) => {
-    setSortType(id);
+    dispatch(setSortId(id));
     setIsLoading(true);
   };
 
   useEffect(() => {
-    const categoryQuery = categoryType > 0 ? `category=${categoryType}` : '';
-    const sortQuery = `sortBy=${sortList[sortType]}&order=desc`;
+    const categoryQuery = categoryId > 0 ? `category=${categoryId}` : '';
+    const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
     const searchProperty = searchValue ? `title=${searchValue}` : '';
 
     const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
@@ -47,7 +57,7 @@ const Home = () => {
         setPizzaItem([]);
         setIsLoading(false);
       });
-  }, [categoryType, sortType, searchValue]);
+  }, [categoryId, sortId, searchValue]);
 
   // 1. Фильтруем по полю поиска
   const filteredPizzas = pizzaItems.filter((obj) =>
@@ -67,8 +77,8 @@ const Home = () => {
   return (
     <>
       <div className="content__top">
-        <Categories value={categoryType} onClickCategory={onChangeCategory} />
-        <Sort value={sortType} onClickSort={onChangeSort} />
+        <Categories value={categoryId} onClickCategory={onChangeCategory} />
+        <Sort value={sortId} onClickSort={onChangeSort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">

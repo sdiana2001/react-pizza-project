@@ -1,5 +1,5 @@
 
-function Categories({value, onClickCategory}) {
+function Categories({ value, onClickCategory }) {
 
 
   const categoriesArr = [
