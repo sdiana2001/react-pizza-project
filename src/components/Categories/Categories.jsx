@@ -1,7 +1,5 @@
-// import { useState } from "react";
 
 function Categories({value, onClickCategory}) {
-  console.log(value);
 
 
   const categoriesArr = [
