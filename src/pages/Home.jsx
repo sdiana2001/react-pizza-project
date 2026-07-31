@@ -1,21 +1,23 @@
 import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCategoryId, setSortId } from '../redux/slices/filterSlice';
+import { setCategoryId } from '../redux/slices/filterSlice';
+
 
 import Categories from '../components/Categories';
-import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import { Pagination } from '../components/Pagination';
 import { SearchContext } from '../App';
+import Sort from '../components/Sort/Sort';
 
-const sortList = ['rating', 'price', 'title'];
 const PIZZAS_LIMIT = 8; 
+const sortList = ['rating', 'price', 'title'];
+
 
 const Home = () => {
+ const dispatch = useDispatch();
  const categoryId = useSelector((state) => state.filterSlice.categoryId);
  const sortId = useSelector((state) => state.filterSlice.sort);
- const dispatch = useDispatch();
 
 
 
@@ -23,8 +25,6 @@ const Home = () => {
 
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const [categoryType, setCategoryType] = useState(0);
-  // const [sortType, setSortType] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { searchValue } = useContext(SearchContext);
@@ -35,16 +35,10 @@ const Home = () => {
     setCurrentPage(1); // При смене категории сбрасываем на 1 страницу
   };
 
-  const onChangeSort = (id) => {
-    dispatch(setSortId(id));
-    setIsLoading(true);
-  };
-
   useEffect(() => {
     const categoryQuery = categoryId > 0 ? `category=${categoryId}` : '';
     const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
     const searchProperty = searchValue ? `title=${searchValue}` : '';
-
     const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
     fetch(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`)
@@ -78,7 +72,7 @@ const Home = () => {
     <>
       <div className="content__top">
         <Categories value={categoryId} onClickCategory={onChangeCategory} />
-        <Sort value={sortId} onClickSort={onChangeSort} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">

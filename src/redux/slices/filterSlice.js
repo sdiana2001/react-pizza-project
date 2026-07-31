@@ -21,3 +21,5 @@ export const filterSlice = createSlice({
 
 export const { setCategoryId, setSortId } = filterSlice.actions;
 export default filterSlice.reducer;
+
+// filterSlice - хранит глобальное состояние фильтров (categoryId, sortId).
