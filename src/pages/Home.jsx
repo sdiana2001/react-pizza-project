@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setPageCount } from '../redux/slices/filterSlice';
 import axios from 'axios';
 
 import Categories from '../components/Categories';
@@ -17,17 +17,21 @@ const Home = () => {
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.filterSlice.categoryId);
   const sortId = useSelector((state) => state.filterSlice.sort);
+  const pageCount = useSelector((state) => state.filterSlice.pageCount);
 
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const { searchValue } = useContext(SearchContext);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
+    dispatch(setPageCount(1));
     setIsLoading(true);
-    setCurrentPage(1); // При смене категории сбрасываем на 1 страницу
+    setPageCount(1); // При смене категории сбрасываем на 1 страницу
+  };
+
+  const onChangePage = (number) => {
+    dispatch(setPageCount(number));
   };
 
   useEffect(() => {
@@ -35,12 +39,12 @@ const Home = () => {
     const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
     const searchProperty = searchValue ? `title=${searchValue}` : '';
     const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
-
+    dispatch(setPageCount(1));
     axios.get(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`).then((res) => {
       setPizzaItem(Array.isArray(res.data) ? res.data : []);
       setIsLoading(false);
     });
-  }, [categoryId, sortId, searchValue]);
+  }, [categoryId, sortId, searchValue, pageCount]);
 
   // 1. Фильтруем по полю поиска
   const filteredPizzas = pizzaItems.filter((obj) =>
@@ -51,7 +55,7 @@ const Home = () => {
   const totalPages = Math.ceil(filteredPizzas.length / PIZZAS_LIMIT);
 
   // 3. Нарезаем ровно по 4 пиццы на страницу
-  const startIndex = (currentPage - 1) * PIZZAS_LIMIT;
+  const startIndex = (pageCount - 1) * PIZZAS_LIMIT;
   const endIndex = startIndex + PIZZAS_LIMIT;
   const currentPagePizzas = filteredPizzas.slice(startIndex, endIndex);
 
@@ -70,11 +74,7 @@ const Home = () => {
           : pizzas}
       </div>
 
-      <Pagination
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onChangePage={(number) => setCurrentPage(number)}
-      />
+      <Pagination totalPages={totalPages} currentPage={pageCount} onChangePage={onChangePage} />
     </>
   );
 };

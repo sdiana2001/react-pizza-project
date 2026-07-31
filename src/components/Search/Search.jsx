@@ -10,11 +10,14 @@ const Search = () => {
   const inputRef = useRef();
 
   // ✅ Создали функцию и сохранили её. В момент рендера ничего НЕ вызвалось!
-  const updateSearchValue = useCallback((str) => {
-    debounce((value) => {
-      setSearchValue(value);
-    }, 300)(str);
-  }, []);
+  const updateSearchValue = useCallback(
+    (str) => {
+      debounce((value) => {
+        setSearchValue(value);
+      }, 300)(str);
+    },
+    [setSearchValue],
+  );
 
   // Запуск происходит ТОЛЬКО при событии onChange
   const onChangeInput = (event) => {
