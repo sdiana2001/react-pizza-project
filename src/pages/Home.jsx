@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId } from '../redux/slices/filterSlice';
-
+import axios from 'axios';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
@@ -10,18 +10,13 @@ import { Pagination } from '../components/Pagination';
 import { SearchContext } from '../App';
 import Sort from '../components/Sort/Sort';
 
-const PIZZAS_LIMIT = 8; 
+const PIZZAS_LIMIT = 8;
 const sortList = ['rating', 'price', 'title'];
 
-
 const Home = () => {
- const dispatch = useDispatch();
- const categoryId = useSelector((state) => state.filterSlice.categoryId);
- const sortId = useSelector((state) => state.filterSlice.sort);
-
-
-
-
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.filterSlice.categoryId);
+  const sortId = useSelector((state) => state.filterSlice.sort);
 
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,16 +36,10 @@ const Home = () => {
     const searchProperty = searchValue ? `title=${searchValue}` : '';
     const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
-    fetch(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setPizzaItem(Array.isArray(res) ? res : []);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setPizzaItem([]);
-        setIsLoading(false);
-      });
+    axios.get(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`).then((res) => {
+      setPizzaItem(Array.isArray(res.data) ? res.data : []);
+      setIsLoading(false);
+    });
   }, [categoryId, sortId, searchValue]);
 
   // 1. Фильтруем по полю поиска
