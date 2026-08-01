@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-
+//Redux — это «Единый источник правды»
 
 const initialState ={
     categoryId: 0,
@@ -8,22 +8,27 @@ const initialState ={
 }
 
 export const filterSlice = createSlice({
-    name: 'filter',
-    initialState: initialState,
-    reducers: {
-        setCategoryId(state, action){
-            state.categoryId = action.payload;
-        },
-        setSortId(state, action){
-            state.sort = action.payload;
-        }, 
-        setPageCount(state, action){
-            state.pageCount = action.payload;
-        }
-    }
-})
+  name: 'filter',
+  initialState: initialState,
+  reducers: {
+    setCategoryId(state, action) {
+      state.categoryId = action.payload;
+    },
+    setSortId(state, action) {
+      state.sort = action.payload;
+    },
+    setPageCount(state, action) {
+      state.pageCount = action.payload;
+    },
+    setFilters(state, action) {
+      state.sort = Number(action.payload.sortId);
+      state.pageCount = Number(action.payload.pageCount);
+      state.categoryId = Number(action.payload.categoryId);
+    },
+  },
+});
 
-export const { setCategoryId, setSortId, setPageCount } = filterSlice.actions;
+export const { setCategoryId, setSortId, setPageCount, setFilters } = filterSlice.actions;
 export default filterSlice.reducer;
 
 // filterSlice - хранит глобальное состояние фильтров (categoryId, sortId).
