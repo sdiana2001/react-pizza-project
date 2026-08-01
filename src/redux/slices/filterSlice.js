@@ -21,7 +21,7 @@ export const filterSlice = createSlice({
       state.pageCount = action.payload;
     },
     setFilters(state, action) {
-      state.sort = Number(action.payload.sortId);
+      state.sort = Number(action.payload.sortId); // оборачиваем в Number() чтобы присвоить актуальную инфу(из запросной строки) в initialState
       state.pageCount = Number(action.payload.pageCount);
       state.categoryId = Number(action.payload.categoryId);
     },

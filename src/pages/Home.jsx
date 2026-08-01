@@ -27,6 +27,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { searchValue } = useContext(SearchContext);
   const isSearch = useRef(false);
+  const isMounted = useRef(false);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -37,45 +38,63 @@ const Home = () => {
     dispatch(setPageCount(number));
   };
 
-  //Проверяет, пришёл ли пользователь по готовой ссылке.
+  // 1. ПЕРВЫЙ ЭТАП: Если при старте есть URL-параметры — сохраняем их в Redux
   useEffect(() => {
     if (window.location.search) {
       // 1. Распаковываем строку URL в объект{}
       const params = qs.parse(window.location.search.substring(1)); // Десериализация(парсинг)
-
+      console.log(params);
       // 2. Отправляем объект в Redux, чтобы обновить состояние
       dispatch(setFilters(params)); // записал их в Redux.
 
-      // 3. Отмечаем, что фильтры были взяты из URL
-      isSearch.current = true;
+      isSearch.current = true; //Если параметры в URL есть, запрос при первом рендере блокируй!
     }
   }, [dispatch]);
 
-  //  Загрузка пицц с сервера
+  // 2. ВТОРОЙ ЭТАП: Загрузка пицц
   useEffect(() => {
-    const categoryQuery = categoryId > 0 ? `category=${categoryId}` : '';
-    const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
-    const searchProperty = searchValue ? `title=${searchValue}` : '';
-    const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
+    const fetchPizzas = () => {
+      setIsLoading(true);
+      const categoryQuery = categoryId > 0 ? `category=${categoryId}` : '';
+      const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
+      const searchProperty = searchValue ? `title=${searchValue}` : '';
+      const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
-    axios.get(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`).then((res) => {
-      setPizzaItem(Array.isArray(res.data) ? res.data : []);
-      setIsLoading(false);
-    });
+      axios.get(`https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`).then((res) => {
+        setPizzaItem(Array.isArray(res.data) ? res.data : []);
+        setIsLoading(false);
+      });
+    };
+
+    // Если при открытии сайта параметров в URL НЕ БЫЛО — делаем обычный запрос
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+
+    // СБРАСЫВАЕМ ФЛАГ: теперь при любых будущих кликах пользователя запросы БУДУТ отправляться!
+    isSearch.current = false;
   }, [categoryId, sortId, searchValue]);
 
+  
+  
+  
+  // Этот useEffect не проверяет, есть ли в ссылке параметры. Он просто «молчит» при первом запуске,
+  // давая время другому коду (useEffect внизу) спокойно прочитать параметры из URL,
+  //  и срабатывает только при втором рендере
 
-
-  //Сохраняет текущие фильтры в адресную строку браузера. Вшиваем параметры в URL при изменении стейтов Redux через qs
+  // 3. ТРЕТИЙ ЭТАП: Запись изменений фильтров из Redux в URL (игнорируя самый первый рендер)
   useEffect(() => {
-    const queryString = qs.stringify({
-      // Сериализация(превращение в строку из обьекта)
-      categoryId, // (сокращённая запись JS: categoryId: categoryId).
-      sortId,
-      pageCount,
-    });
+    // Проверка if (isMounted.current) спасает ссылку от преждевременной дефолтной перезаписи при первой загрузке страницы!
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        categoryId, // (сокращённая запись JS: categoryId: categoryId).
+        sortId,
+        pageCount,
+      });
 
-    navigate(`?${queryString}`); // чтобы эту полученную строку вставить прямиком в URL-адрес браузера
+      navigate(`?${queryString}`); // navigate моментально вставит строчку в URL браузера.
+    }
+    isMounted.current = true; // // После первого рендера разблокируем обновление URL
   }, [categoryId, sortId, pageCount, navigate]);
 
   // Фильтрация по поисковому запросу
@@ -105,3 +124,9 @@ const Home = () => {
 };
 
 export default Home;
+
+// Запрет: Переменная isMounted.current изначально равна false.
+// Почему: Нам НЕЛЬЗЯ переписывать URL дефолтными значениями из Redux (categoryId: 0 и т.д.), 
+// потому что пользователь мог прийти по готовой ссылке извне (например, с фильтрами ?categoryId=2).
+// Что происходит: Код с navigate пропускается, строка URL остается чистой/исходной,
+//  а в конце isMounted.current переключается на true.
