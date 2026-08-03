@@ -4,9 +4,8 @@ import Search from '../Search';
 import { useSelector } from 'react-redux';
 
 function Header() {
-  const { totalPrice, items } = useSelector((state) => state.cart);
-  // Считаем общее количество всех пицц:
-  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
+  const { totalPrice, totalCount } = useSelector((state) => state.cart);
+  
 
   return (
     <header className={styles.header}>

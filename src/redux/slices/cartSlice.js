@@ -20,9 +20,16 @@ export const cartSlice = createSlice({
       }
 
       // Считаем общую стоимость всех товаров в корзине
-      state.totalPrice = state.items.reduce((sum, obj) => {
-        return obj.price * obj.count + sum;
-      }, 0);
+      state.totalCount = state.items.reduce((sum, obj) => obj.count + sum, 0);
+      state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
+    },
+   
+    minusItem(state, action) {
+       const findItem = state.items.find((obj) => obj.id === action.payload);
+
+       if (findItem) {
+         findItem.count--;
+       }
     },
 
     removeItem(state, action) {
@@ -35,7 +42,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { addItem, removeItem, clearItem } = cartSlice.actions;
+export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;
 export default cartSlice.reducer;
 
 // cartSlice - хранит глобальное состояние корзины.

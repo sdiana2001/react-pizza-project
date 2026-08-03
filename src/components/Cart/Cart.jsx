@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import './Cart.scss';
 // import { removeItem, clearItem } from '../../redux/slices/cartSlice';
-// import PizzaBlock from '../PizzaBlock';
 import CartItems from '../CartItems/CartItems';
 import { useSelector } from 'react-redux';
 
