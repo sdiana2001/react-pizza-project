@@ -3,10 +3,10 @@ import styles from './Header.module.scss';
 import Search from '../Search';
 import { useSelector } from 'react-redux';
 
-
 function Header() {
   const { totalPrice, items } = useSelector((state) => state.cart);
-
+  // Считаем общее количество всех пицц:
+  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
 
   return (
     <header className={styles.header}>
@@ -53,7 +53,7 @@ function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>{items.length}</span>
+            <span>{totalCount}</span>
           </Link>
         </div>
       </div>

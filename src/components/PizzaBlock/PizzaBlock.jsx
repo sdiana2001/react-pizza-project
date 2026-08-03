@@ -2,44 +2,28 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../../redux/slices/cartSlice';
 
-
+const typeNames = ['тонкое', 'традиционное'];
+const typeSizes = ['26см', '30см', '40см'];
 
 function PizzaBlock({ title, price, imageUrl, id, sizes, types }) {
   const dispatch = useDispatch();
-  // const {} = useSelector((state)=> state.cart);
   const [pizzaCount, setPizzaCount] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
   const [activeType, setActiveType] = useState(0);
 
-  const typeNames = ['тонкое', 'традиционное'];
+  const onClickAdd = () => {
+    const item = {
+      id,
+      title,
+      price,
+      imageUrl,
+      type: typeNames[activeType],
+      syze: typeSizes[activeSize],
+    };
 
-  // const handleClickPlus = () => {
-  //   // onClickAddItem({ id, title, price, imageUrl });
-  // };
-
-
-
-const onClickAdd = ()=>{
-  const item = {
-    id,
-    title,
-    price,
-    imageUrl,
-    type: activeType,
-    syze: activeSize,
-  };
-
-  dispatch(addItem(item));
+    dispatch(addItem(item));
     setPizzaCount(pizzaCount + 1);
-}
-
-
-
-
-
-
-
-
+  };
 
   return (
     <div className="pizza-block">

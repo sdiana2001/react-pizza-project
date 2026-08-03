@@ -1,7 +1,13 @@
 import { Link } from 'react-router-dom';
 import './Cart.scss';
+// import { removeItem, clearItem } from '../../redux/slices/cartSlice';
+// import PizzaBlock from '../PizzaBlock';
+import CartItems from '../CartItems/CartItems';
+import { useSelector } from 'react-redux';
 
 const Cart = () => {
+  const items = useSelector((state)=> state.cart.items)
+
   return (
     <div className="cart">
       {/* Шапка */}
@@ -18,49 +24,9 @@ const Cart = () => {
 
       {/* Список товаров */}
       <div className="cart__items">
-        {/* Товар 1 */}
-        <div className="cart__item">
-          <div className="cart__item-img">
-            <img src="/src/assets/pizza/pizza-1.png" alt="Сырный цыпленок" />
-          </div>
-          <div className="cart__item-info">
-            <h3>Сырный цыпленок</h3>
-            <p>тонкое тесто, 26 см.</p>
-          </div>
-          <div className="cart__item-count">
-            <button>-</button>
-            <b>2</b>
-            <button>+</button>
-          </div>
-          <div className="cart__item-price">
-            <b>770 ₽</b>
-          </div>
-          <div className="cart__item-remove">
-            <button>✕</button>
-          </div>
-        </div>
-
-        {/* Товар 2 */}
-        <div className="cart__item">
-          <div className="cart__item-img">
-            <img src="/src/assets/pizza/pizza-2.png" alt="Креветки по-азиатски" />
-          </div>
-          <div className="cart__item-info">
-            <h3>Креветки по-азиатски</h3>
-            <p>толстое тесто, 40 см.</p>
-          </div>
-          <div className="cart__item-count">
-            <button>-</button>
-            <b>1</b>
-            <button>+</button>
-          </div>
-          <div className="cart__item-price">
-            <b>290 ₽</b>
-          </div>
-          <div className="cart__item-remove">
-            <button>✕</button>
-          </div>
-        </div>
+        {items.map((obj) => (
+          <CartItems key={obj.id} {...obj} />
+        ))}
       </div>
 
       {/* Подвал */}
