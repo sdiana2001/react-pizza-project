@@ -19,13 +19,12 @@ const sortList = ['rating', 'price', 'title'];
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const categoryId = useSelector((state) => state.filterSlice.categoryId);
-  const sortId = useSelector((state) => state.filterSlice.sort);
-  const pageCount = useSelector((state) => state.filterSlice.pageCount);
+  const { categoryId, sortId, pageCount } = useSelector((state) => state.filter);
 
   const [pizzaItems, setPizzaItem] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { searchValue } = useContext(SearchContext);
+
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
@@ -38,20 +37,7 @@ const Home = () => {
     dispatch(setPageCount(number));
   };
 
-  // 1. ПЕРВЫЙ ЭТАП: Если при старте есть URL-параметры — сохраняем их в Redux
-  useEffect(() => {
-    if (window.location.search) {
-      // 1. Распаковываем строку URL в объект{}
-      const params = qs.parse(window.location.search.substring(1)); // Десериализация(парсинг)
-      console.log(params);
-      // 2. Отправляем объект в Redux, чтобы обновить состояние
-      dispatch(setFilters(params)); // записал их в Redux.
-
-      isSearch.current = true; //Если параметры в URL есть, запрос при первом рендере блокируй!
-    }
-  }, [dispatch]);
-
-  // 2. ВТОРОЙ ЭТАП: Загрузка пицц
+  // Загрузка пицц
   useEffect(() => {
     const fetchPizzas = () => {
       setIsLoading(true);
@@ -75,14 +61,22 @@ const Home = () => {
     isSearch.current = false;
   }, [categoryId, sortId, searchValue]);
 
-  
-  
-  
   // Этот useEffect не проверяет, есть ли в ссылке параметры. Он просто «молчит» при первом запуске,
   // давая время другому коду (useEffect внизу) спокойно прочитать параметры из URL,
   //  и срабатывает только при втором рендере
 
-  // 3. ТРЕТИЙ ЭТАП: Запись изменений фильтров из Redux в URL (игнорируя самый первый рендер)
+  //  Если при старте есть URL-параметры — сохраняем их в Redux
+  useEffect(() => {
+    if (window.location.search) {
+      // 1. Распаковываем строку URL в объект{}
+      const params = qs.parse(window.location.search.substring(1)); // Десериализация(парсинг)
+      // 2. Отправляем объект в Redux, чтобы обновить состояние
+      dispatch(setFilters(params));
+      isSearch.current = true; //Если параметры в URL есть, запрос при первом рендере блокируй!
+    }
+  }, [dispatch]);
+
+  // 3. Запись изменений фильтров из Redux в URL (игнорируя самый первый рендер)
   useEffect(() => {
     // Проверка if (isMounted.current) спасает ссылку от преждевременной дефолтной перезаписи при первой загрузке страницы!
     if (isMounted.current) {
@@ -117,7 +111,7 @@ const Home = () => {
           ? [...new Array(PIZZAS_LIMIT)].map((_, index) => <Skeleton key={index} />)
           : currentItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
       </div>
-
+ 
       <Pagination totalPages={totalPages} currentPage={pageCount} onChangePage={onChangePage} />
     </>
   );
@@ -126,7 +120,7 @@ const Home = () => {
 export default Home;
 
 // Запрет: Переменная isMounted.current изначально равна false.
-// Почему: Нам НЕЛЬЗЯ переписывать URL дефолтными значениями из Redux (categoryId: 0 и т.д.), 
+// Почему: Нам НЕЛЬЗЯ переписывать URL дефолтными значениями из Redux (categoryId: 0 и т.д.),
 // потому что пользователь мог прийти по готовой ссылке извне (например, с фильтрами ?categoryId=2).
 // Что происходит: Код с navigate пропускается, строка URL остается чистой/исходной,
 //  а в конце isMounted.current переключается на true.

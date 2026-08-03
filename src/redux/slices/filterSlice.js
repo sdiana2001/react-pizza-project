@@ -7,7 +7,7 @@ const initialState ={
     pageCount: 1
 }
 
-export const filterSlice = createSlice({
+export const filter = createSlice({
   name: 'filter',
   initialState: initialState,
   reducers: {
@@ -28,7 +28,7 @@ export const filterSlice = createSlice({
   },
 });
 
-export const { setCategoryId, setSortId, setPageCount, setFilters } = filterSlice.actions;
-export default filterSlice.reducer;
+export const { setCategoryId, setSortId, setPageCount, setFilters } = filter.actions;
+export default filter.reducer;
 
 // filterSlice - хранит глобальное состояние фильтров (categoryId, sortId).

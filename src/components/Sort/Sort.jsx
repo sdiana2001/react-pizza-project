@@ -1,31 +1,43 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import { setSortId } from '../../redux/slices/filterSlice.js';
 
-
-
-
 function Sort() {
-  
- const dispatch = useDispatch();
- const sortId = useSelector((state) => state.filterSlice.sort);
-
+  const dispatch = useDispatch();
+  const sortId = useSelector((state) => state.filter.sort);
 
   const [open, setOpen] = useState(false);
+  const sortRef = useRef(); // Создается объект { current: undefined }.
 
   const popup = ['популярности', 'цене', 'алфавиту'];
   const sortName = popup[sortId];
- 
 
   const changedFilter = (index) => {
     dispatch(setSortId(index));
     setOpen(false);
   };
 
+useEffect(() => {
+  const handleClick = (event) => {
+    const path = event.composedPath();
+
+    // Если кликнули ВНЕ блока sortRef — закрываем
+    if (sortRef.current && !path.includes(sortRef.current)) {
+      setOpen(false);
+    }
+  };
+
+  // Передаем { capture: true } или просто true третьим аргументом
+  document.body.addEventListener('click', handleClick, true);
+
+  return () => {
+    document.body.removeEventListener('click', handleClick, true);
+  };
+}, []);
 
 
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
