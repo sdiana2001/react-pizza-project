@@ -19,7 +19,6 @@ const Cart = () => {
 
   return (
     <div className="cart">
-      {/* Шапка */}
       <div className="cart__top">
         <h2 className="cart__title">
           <img src="/src/assets/icons/cart-black.svg" alt="cart" />

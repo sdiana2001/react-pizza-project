@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-//Redux — это «Единый источник правды»
 
 const initialState = {
   totalPrice: 0,
@@ -27,13 +26,20 @@ export const cartSlice = createSlice({
     minusItem(state, action) {
        const findItem = state.items.find((obj) => obj.id === action.payload);
 
-       if (findItem) {
-         findItem.count--;
-       }
+       if (findItem){
+         if (findItem.count > 1) {
+           findItem.count--;
+         } else {
+           // Если остался 1 товар — удаляем его из массива
+           state.items = state.items.filter((obj) => obj.id !== action.payload);
+         }
+        }
     },
 
     removeItem(state, action) {
       state.items = state.items.filter((obj) => obj.id !== action.payload);
+      // 'Возьми текущий список товаров state.items, пройдпись по каждому товару
+      // и оставь только те пиццы, у которых id НЕ совпадает с переданным action.payload.';
     },
 
     clearItem(state) {
@@ -49,3 +55,8 @@ export const { addItem, removeItem, clearItem, minusItem } = cartSlice.actions;
 export default cartSlice.reducer;
 
 // cartSlice - хранит глобальное состояние корзины.
+// Объект с новыми данными будет находится в свойстве payload объекта action, 
+// который будет генерироваться обработчиком при нажатии кнопки
+
+//аction - это некоторое событие, представленное в виде объекта, описывающее то, что произошло в приложении. 
+// метод dispatch -  единственный способ изменить state
