@@ -22,7 +22,6 @@ const Home = () => {
   const navigate = useNavigate();
   const { categoryId, sortId, pageCount } = useSelector((state) => state.filter);
   const { pizzaItems, status } = useSelector((state) => state.pizza);
-  const isLoading = status === 'loading';
   const { searchValue } = useContext(SearchContext);
 
   const isSearch = useRef(false);
@@ -97,11 +96,20 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {isLoading
-          ? [...new Array(PIZZAS_LIMIT)].map((_, index) => <Skeleton key={index} />)
-          : currentItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
-      </div>
+      {status === 'error' ? (
+        <>
+          <h2 className="content-error">Произошла ошибка 😕!</h2>
+          <p className="content-error_info">
+            Не удалось загрузить пиццы. Попробуйте повторить попытку позже или обновите страницу.
+          </p>
+        </>
+      ) : (
+        <div className="content__items">
+          {status === 'loading'
+            ? [...new Array(PIZZAS_LIMIT)].map((_, index) => <Skeleton key={index} />)
+            : currentItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+        </div>
+      )}
 
       <Pagination totalPages={totalPages} currentPage={pageCount} onChangePage={onChangePage} />
     </>
