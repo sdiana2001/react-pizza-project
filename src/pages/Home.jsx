@@ -1,9 +1,9 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
-import { setPizzaItem } from '../redux/slices/pizzaSlice';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
+
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import qs from 'qs';
 
 import Categories from '../components/Categories';
@@ -21,9 +21,8 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { categoryId, sortId, pageCount } = useSelector((state) => state.filter);
-  const { pizzaItems } = useSelector((state) => state.pizza);
-
-  const [isLoading, setIsLoading] = useState(true);
+  const { pizzaItems, status } = useSelector((state) => state.pizza);
+  const isLoading = status === 'loading';
   const { searchValue } = useContext(SearchContext);
 
   const isSearch = useRef(false);
@@ -32,7 +31,6 @@ const Home = () => {
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
     dispatch(setPageCount(1));
-    setIsLoading(true);
   };
   const onChangePage = (number) => {
     dispatch(setPageCount(number));
@@ -40,46 +38,19 @@ const Home = () => {
 
   // Загрузка пицц
   useEffect(() => {
-    // 1. Объявляем асинхронную функцию
-    const fetchPizzas = async () => {
-      setIsLoading(true);
-
+    const getPizzas = () => {
       const categoryQuery = categoryId > 0 ? `category=${categoryId}` : '';
       const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
       const searchProperty = searchValue ? `title=${searchValue}` : '';
-      const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
-      // 2. Открываем блок перехвата ошибок
-      try {
-        // 3. Ждём выполнения HTTP-запроса
-        const res = await axios.get(
-          `https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`,
-        );
-
-        // 4. Записываем полученные данные в Redux
-        dispatch(setPizzaItem(Array.isArray(res.data) ? res.data : []));
-      } catch (error) {
-        // 5. Обрабатываем возможную ошибку запроса
-        console.error('Ошибка при получении пицц:', error);
-        alert('Не удалось загрузить пиццы. Попробуйте позже.');
-        dispatch(setPizzaItem([])); // Сбрасываем массив, чтобы UI не завис
-      } finally {
-        // 6. Выполняется ВСЕГДА (и при успехе, и при ошибке)
-        setIsLoading(false);
-      }
+      dispatch(fetchPizzas({ categoryQuery, sortQuery, searchProperty }));
     };
-
-    // Если при открытии сайта параметров в URL НЕ БЫЛО — делаем обычный запрос
     if (!isSearch.current) {
-      fetchPizzas();
+      getPizzas();
     }
 
-    // СБРАСЫВАЕМ ФЛАГ: теперь при любых будущих кликах пользователя запросы БУДУТ отправляться!
     isSearch.current = false;
   }, [categoryId, sortId, searchValue, dispatch]);
-
-
-
 
   // Этот useEffect не проверяет, есть ли в ссылке параметры. Он просто «молчит» при первом запуске,
   // давая время другому коду (useEffect внизу) спокойно прочитать параметры из URL,
