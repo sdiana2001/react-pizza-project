@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Cart from './components/Cart/Cart';
 import NotFound from './pages/NotFound';
+import FullPizza from './pages/FullPizza';
 import './scss/index.scss';
 
 
@@ -23,6 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/pizza/:id" element={<FullPizza />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

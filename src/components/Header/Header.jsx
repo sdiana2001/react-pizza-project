@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Search from '../Search';
 import { useSelector } from 'react-redux';
 
 function Header() {
   const { totalPrice, totalCount } = useSelector((state) => state.cart);
-  
+  const location = useLocation(); // реагирует на изменение роутера(путей) и заставляет сделать перерисовку тоесть обноление
 
   return (
     <header className={styles.header}>
@@ -21,7 +21,8 @@ function Header() {
         </Link>
         <Search />
         <div className="header__cart">
-          <Link to="/cart" className="button button--cart">
+          {location.pathname !== '/cart' &&
+           <Link to="/cart" className="button button--cart">
             <span>{totalPrice} ₽</span>
             <div className="button__delimiter"></div>
             <svg
@@ -53,7 +54,8 @@ function Header() {
               />
             </svg>
             <span>{totalCount}</span>
-          </Link>
+          </Link>}
+         
         </div>
       </div>
     </header>

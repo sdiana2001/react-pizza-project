@@ -2,7 +2,6 @@ import { useContext, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
-
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 
@@ -107,7 +106,9 @@ const Home = () => {
         <div className="content__items">
           {status === 'loading'
             ? [...new Array(PIZZAS_LIMIT)].map((_, index) => <Skeleton key={index} />)
-            : currentItems.map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+            : currentItems.map((obj) => (
+                  <PizzaBlock {...obj} key={obj.id} />
+              ))}
         </div>
       )}
 
@@ -123,3 +124,4 @@ export default Home;
 // потому что пользователь мог прийти по готовой ссылке извне (например, с фильтрами ?categoryId=2).
 // Что происходит: Код с navigate пропускается, строка URL остается чистой/исходной,
 //  а в конце isMounted.current переключается на true.
+

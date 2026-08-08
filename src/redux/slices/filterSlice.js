@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 //Redux — это «Единый источник правды»
 
-const initialState ={
-    categoryId: 0,
-    sort: 0,
-    pageCount: 1
-}
+const initialState = {
+  categoryId: 0,
+  sortId: 0,
+  pageCount: 1,
+};
 
 export const filter = createSlice({
   name: 'filter',
@@ -15,7 +15,7 @@ export const filter = createSlice({
       state.categoryId = action.payload;
     },
     setSortId(state, action) {
-      state.sort = action.payload;
+      state.sortId = action.payload;
     },
     setPageCount(state, action) {
       state.pageCount = action.payload;

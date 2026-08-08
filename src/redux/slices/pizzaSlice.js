@@ -1,18 +1,30 @@
 import axios from 'axios';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+
 // First, create the thunk
+
 export const fetchPizzas = createAsyncThunk(
   'pizza/fetchPizzaStatus',
-  async ({ categoryQuery, sortQuery, searchProperty }) => {
-    const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
-    const { data } = await axios.get(
-      `https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`,
-    );
+  async ({ categoryQuery, sortQuery, searchProperty }, thunkAPI) => {
+    try {
+      const queryString = [categoryQuery, sortQuery, searchProperty].filter(Boolean).join('&');
 
-    return data;
+      const { data } = await axios.get(
+        `https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`,
+        { signal: thunkAPI.signal }, // Отмена предыдущего запроса при частых кликах. Его задача обрывать прошлый не завершившийся запрос
+      );
+
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || 'Не удалось загрузить пиццы');
+    }
   },
 );
+
+
+
+
 
 
 const initialState = {
@@ -36,7 +48,7 @@ export const pizzaSlice = createSlice({
       })
       .addCase(fetchPizzas.fulfilled, (state, action) => {
         state.pizzaItems = action.payload;
-        state.status = 'succes';
+        state.status = 'success';
       })
       .addCase(fetchPizzas.rejected, (state)=>{
         state.status = 'error';
