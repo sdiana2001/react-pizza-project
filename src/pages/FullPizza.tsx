@@ -1,13 +1,19 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import styles from '../scss/FullPizza.module.scss'; // Или .css
+import styles from '../scss/FullPizza.module.scss'; 
 
 const FullPizza = () => {
-  const [pizza, setPizza] = useState();
-  const [activeSize, setActiveSize] = useState(1); // 0: 25см, 1: 30см, 2: 35см
-  const [activeType, setActiveType] = useState(0); // 0: Традиционное, 1: Тонкое
-  const { id } = useParams();
+  type Pizza = {
+  imageUrl: string;
+  title: string;
+  price: number;
+};
+
+  const [pizza, setPizza] = useState<Pizza>();
+  const [activeSize, setActiveSize] = useState(1); 
+  const [activeType, setActiveType] = useState(0); 
+  const { id } = useParams<{ id:string }>();
 
   const sizes = [25, 30, 35];
   const types = ['Традиционное', 'Тонкое'];
@@ -23,6 +29,8 @@ const FullPizza = () => {
     }
     fetchPizza();
   }, [id]);
+
+  
 
   if (!pizza) {
     return <div className={styles.loading}>Загрузка...</div>;
@@ -77,7 +85,7 @@ const FullPizza = () => {
           </div>
 
           {/* Кнопка добавления в корзину */}
-          <button className={styles.addBtn}>В корзину за {pizza.price} сом</button>
+          <button className={styles.addBtn}>В корзину за {pizza.price} р</button>
         </div>
       </div>
     </div>
