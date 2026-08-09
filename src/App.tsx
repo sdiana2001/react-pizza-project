@@ -2,7 +2,7 @@ import { useState, createContext } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 
-import Header from './components/Header';
+import Header from './components/Header/index';
 import Home from './pages/Home';
 import Cart from './components/Cart/Cart';
 import NotFound from './pages/NotFound';
@@ -10,7 +10,7 @@ import FullPizza from './pages/FullPizza';
 import './scss/index.scss';
 
 
-export const SearchContext = createContext();
+export const SearchContext = createContext<any>('');
 
 function App() {
   const [searchValue, setSearchValue] = useState('');
