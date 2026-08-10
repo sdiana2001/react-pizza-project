@@ -1,6 +1,10 @@
+type CategoriesProps = {
+  value: number,
+  onClickCategory: any
+}
 
-function Categories({ value, onClickCategory }) {
 
+const Categories =({ value, onClickCategory }:CategoriesProps) => {
 
   const categoriesArr = [
     'Все',

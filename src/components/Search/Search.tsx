@@ -1,5 +1,5 @@
 import { useCallback, useContext, useRef, useState } from 'react';
-import debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce'; //задерживает вызов функции на заданное время.
 import styles from './Search.module.scss';
 import { SearchContext } from '../../App';
 
@@ -7,20 +7,20 @@ const Search = () => {
   const [value, setValue] = useState('');
   const { setSearchValue } = useContext(SearchContext);
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // ✅ Создали функцию и сохранили её. В момент рендера ничего НЕ вызвалось!
   const updateSearchValue = useCallback(
-    (str) => {
+    (str:string ) => {
       debounce((value) => {
         setSearchValue(value);
-      }, 300)(str);
+      }, 500)(str);
     },
     [setSearchValue],
   );
 
   // Запуск происходит ТОЛЬКО при событии onChange
-  const onChangeInput = (event) => {
+  const onChangeInput = (event:any) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };
@@ -28,7 +28,7 @@ const Search = () => {
   const handleClear = () => {
     setValue(''); // 1. Очищаем визуальный инпут СРАЗУ
     setSearchValue(''); // 2. Очищаем поиск в контексте (отправляет запрос)
-    inputRef.current.focus(); // тут хранится ссылка на input
+    inputRef.current?.focus(); // тут хранится ссылка на input
   };
 
   return (

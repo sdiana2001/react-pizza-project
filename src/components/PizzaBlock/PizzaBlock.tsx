@@ -6,7 +6,16 @@ import { Link } from 'react-router-dom';
 const typeNames = ['тонкое', 'традиционное'];
 const typeSizes = ['26см', '30см', '40см'];
 
-function PizzaBlock({ title, price, imageUrl, id, sizes, types }) {
+type HeaderProps = {
+title:string, 
+price:number, 
+imageUrl:string, 
+id:string, 
+sizes: number[], 
+types: number[],
+}
+
+function PizzaBlock({ title, price, imageUrl, id, sizes, types }:HeaderProps) {
   const dispatch = useDispatch();
   const [pizzaCount, setPizzaCount] = useState(0);
   const [activeSize, setActiveSize] = useState(0);

@@ -38,11 +38,11 @@
     }
 
     &:hover {
-      background-color: darken(#1e1d1d, 8%);
+      background-color: #1e1d1d;
     }
 
     &:active {
-      background-color: darken(#282828, 12%);
+      background-color: #282828;
       transform: translateY(1px);
     }
   }

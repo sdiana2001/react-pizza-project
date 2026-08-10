@@ -1,6 +1,13 @@
 import styles from './Pagination.module.scss';
 
-export function Pagination({ totalPages = 3, currentPage = 1, onChangePage }) {
+type PaginationProps = {
+  totalPages?: number,
+  currentPage?: number,
+  onChangePage: any
+}
+
+
+export function Pagination({ totalPages = 3, currentPage = 1, onChangePage }:PaginationProps) {
   if (totalPages <= 1) return null;
 
   return (

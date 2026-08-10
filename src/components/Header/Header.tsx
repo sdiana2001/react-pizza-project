@@ -2,9 +2,13 @@ import { Link, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Search from '../Search';
 import { useSelector } from 'react-redux';
+import logoSvg from '../../assets/icons/logo.svg';
+import { RootState } from '../../redux/store';
+
+
 
 function Header() {
-  const { totalPrice, totalCount } = useSelector((state) => state.cart);
+  const { totalPrice, totalCount } = useSelector((state:RootState) => state.cart);
   const location = useLocation(); // реагирует на изменение роутера(путей) и заставляет сделать перерисовку тоесть обноление
 
   return (
@@ -12,7 +16,7 @@ function Header() {
       <div className={styles.container}>
         <Link to="/">
           <div className={styles.logo}>
-            <img width="38" src="/src/assets/icons/logo.svg" alt="Pizza logo" />
+            <img width="38" src={logoSvg}alt="Pizza logo" />
             <div>
               <h1>React Pizza</h1>
               <p>самая вкусная пицца во вселенной</p>
