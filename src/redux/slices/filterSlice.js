@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-//Redux — это «Единый источник правды»
 
 const initialState = {
   categoryId: 0,
@@ -10,6 +9,10 @@ const initialState = {
 export const filter = createSlice({
   name: 'filter',
   initialState: initialState,
+
+
+
+
   reducers: {
     setCategoryId(state, action) {
       state.categoryId = action.payload;
@@ -21,12 +24,15 @@ export const filter = createSlice({
       state.pageCount = action.payload;
     },
     setFilters(state, action) {
-      state.sort = Number(action.payload.sortId); // оборачиваем в Number() чтобы присвоить актуальную инфу(из запросной строки) в initialState
+      state.sortId = Number(action.payload.sortId); // оборачиваем в Number() чтобы присвоить актуальную инфу(из запросной строки) в initialState
       state.pageCount = Number(action.payload.pageCount);
       state.categoryId = Number(action.payload.categoryId);
     },
   },
 });
+
+
+
 
 export const { setCategoryId, setSortId, setPageCount, setFilters } = filter.actions;
 export default filter.reducer;

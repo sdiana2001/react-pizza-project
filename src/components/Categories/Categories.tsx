@@ -1,6 +1,6 @@
 type CategoriesProps = {
   value: number,
-  onClickCategory: any
+  onClickCategory: (i: number) => void;
 }
 
 

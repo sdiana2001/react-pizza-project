@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState, AppDispatch } from '../redux/store';
 import qs from 'qs';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-import { Pagination } from '../components/Pagination';
+import { Pagination } from '../components/Pagination/Pagination';
 import { usePagination } from '../hooks/usePagination';
 import { SearchContext } from '../App';
 import Sort from '../components/Sort/Sort';
@@ -17,20 +18,22 @@ const PIZZAS_LIMIT = 8;
 const sortList = ['rating', 'price', 'title'];
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { categoryId, sortId, pageCount } = useSelector((state) => state.filter);
-  const { pizzaItems, status } = useSelector((state) => state.pizza);
+  const { categoryId, sortId, pageCount } = useSelector((state:RootState) => state.filter);
+  const { pizzaItems, status } = useSelector((state:RootState) => state.pizza);
   const { searchValue } = useContext(SearchContext);
 
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const onChangeCategory = (id) => {
-    dispatch(setCategoryId(id));
+
+  const onChangeCategory = (id:number) => {
+    dispatch(setCategoryId(id)); // отправляет экшен в Redux для смены активной категории.
     dispatch(setPageCount(1));
   };
-  const onChangePage = (number) => {
+
+  const onChangePage = (number:number) => {
     dispatch(setPageCount(number));
   };
 
@@ -41,7 +44,12 @@ const Home = () => {
       const sortQuery = `sortBy=${sortList[sortId]}&order=desc`;
       const searchProperty = searchValue ? `title=${searchValue}` : '';
 
-      dispatch(fetchPizzas({ categoryQuery, sortQuery, searchProperty }));
+      dispatch(
+      // @ts-ignore
+        fetchPizzas({ 
+        categoryQuery, 
+        sortQuery, 
+        searchProperty }));
     };
     if (!isSearch.current) {
       getPizzas();

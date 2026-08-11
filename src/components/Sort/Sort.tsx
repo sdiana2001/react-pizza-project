@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useRef, useState } from 'react';
-import { setSortId } from '../../redux/slices/filterSlice.js';
+import { setSortId } from '../../redux/slices/filterSlice';
 import { RootState } from '../../redux/store';
 
 
@@ -11,7 +11,7 @@ import { RootState } from '../../redux/store';
 function Sort() {
 
   const dispatch = useDispatch();
-  const sortId = useSelector((state: RootState) => state.filter.sort);
+  const sortId = useSelector((state: RootState) => state.filter.sortId);
 
   const [open, setOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null); // нужен для реализации функции «закрытие выпадающего меню при клике вне его области»
@@ -29,9 +29,9 @@ useEffect(() => {
     const path = event.composedPath();
 
     // Если кликнули ВНЕ блока sortRef — закрываем
-    if (sortRef.current && !path.includes(sortRef.current)) {
-      setOpen(false);
-    }
+  if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
   };
 
   // Передаем { capture: true } или просто true третьим аргументом

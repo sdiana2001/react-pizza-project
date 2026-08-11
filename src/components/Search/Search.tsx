@@ -4,7 +4,7 @@ import styles from './Search.module.scss';
 import { SearchContext } from '../../App';
 
 const Search = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
   const { setSearchValue } = useContext(SearchContext);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -12,7 +12,7 @@ const Search = () => {
   // ✅ Создали функцию и сохранили её. В момент рендера ничего НЕ вызвалось!
   const updateSearchValue = useCallback(
     (str:string ) => {
-      debounce((value) => {
+      debounce((value:string) => {
         setSearchValue(value);
       }, 500)(str);
     },
@@ -20,7 +20,7 @@ const Search = () => {
   );
 
   // Запуск происходит ТОЛЬКО при событии onChange
-  const onChangeInput = (event:any) => {
+  const onChangeInput = (event:React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };
