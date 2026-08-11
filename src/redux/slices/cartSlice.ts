@@ -1,7 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+export type TCartItem = {  // если нужно объединение видов 'a' | 'b', и описание структур данных  берем type
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  type: string;
+  size: number;
+  count: number;
+};
+
+export interface ICartSliceState {// для описания стейтов и пропсов — берем interface.
+  totalPrice: number;
+  totalCount: number;
+  items: TCartItem[];
+}
+
+const initialState: ICartSliceState = {
   totalPrice: 0,
+  totalCount: 0,
   items: [],
 };
 
@@ -9,7 +26,7 @@ export const cartSlice = createSlice({
   name: 'cart',
   initialState: initialState,
   reducers: {
-    addItem(state, action) {
+    addItem(state, action: PayloadAction<TCartItem>) {  // action.payload ожидает объект товара (TCartItem)
       const findItem = state.items.find((obj) => obj.id === action.payload.id);
 
       if (findItem) {
@@ -22,18 +39,18 @@ export const cartSlice = createSlice({
       state.totalCount = state.items.reduce((sum, obj) => obj.count + sum, 0);
       state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
     },
-   
-    minusItem(state, action) {
-       const findItem = state.items.find((obj) => obj.id === action.payload);
 
-       if (findItem){
-         if (findItem.count > 1) {
-           findItem.count--;
-         } else {
-           // Если остался 1 товар — удаляем его из массива
-           state.items = state.items.filter((obj) => obj.id !== action.payload);
-         }
+    minusItem(state, action:PayloadAction<string>) {
+      const findItem = state.items.find((obj) => obj.id === action.payload);
+
+      if (findItem) {
+        if (findItem.count > 1) {
+          findItem.count--;
+        } else {
+          // Если остался 1 товар — удаляем его из массива
+          state.items = state.items.filter((obj) => obj.id !== action.payload);
         }
+      }
     },
 
     removeItem(state, action) {
@@ -46,7 +63,6 @@ export const cartSlice = createSlice({
       state.items = [];
       state.totalPrice = 0;
       state.totalCount = 0;
-
     },
   },
 });
