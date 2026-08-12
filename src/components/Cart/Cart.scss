@@ -5,7 +5,13 @@ $gray-border: #f4f4f4;
 .cart {
   max-width: 800px;
   margin: 40px auto;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
 
   /* Шапка */
   &__top {
@@ -199,7 +205,7 @@ $gray-border: #f4f4f4;
         transition: background-color 0.15s ease-in-out;
 
         &:hover {
-          background-color: darken($orange, 8%);
+          background-color: $orange;
         }
       }
     }
@@ -207,50 +213,51 @@ $gray-border: #f4f4f4;
 }
 
 .button__back {
-      display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 210px;
-        height: 55px;
-        padding: 0 25px;
-        border-radius: 30px; /* Круглые края (pill-shape) */
-        border: none;
-        background-color: #383838;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-    transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
-    
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 210px;
+  height: 55px;
+  padding: 0 25px;
+  border-radius: 30px; /* Круглые края (pill-shape) */
+  border: none;
+  background-color: #383838;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease-in-out,
+    transform 0.15s ease-in-out;
 
-    span {
-      color: #fff;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    &:hover {
-      background-color: darken(#000000, 8%);
-    }
+  span {
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
   }
 
-  .pay-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 210px;
-        height: 55px;
-        padding: 0 25px;
-        border-radius: 30px; /* Круглые края (pill-shape) */
-        border: none;
-        background-color: $orange;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background-color 0.15s ease-in-out;
+  &:hover {
+    background-color: #000000;
+  }
+}
 
-        &:hover {
-          background-color: darken($orange, 8%);
-        }
-      }
+.pay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 210px;
+  height: 55px;
+  padding: 0 25px;
+  border-radius: 30px; /* Круглые края (pill-shape) */
+  border: none;
+  background-color: $orange;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+
+  &:hover {
+    background-color: $orange;
+  }
+}
