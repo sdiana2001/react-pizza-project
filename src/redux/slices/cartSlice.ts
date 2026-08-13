@@ -6,7 +6,7 @@ export type TCartItem = {  // если нужно объединение вид�
   price: number;
   imageUrl: string;
   type: string;
-  size: number;
+  size: string;
   count: number;
 };
 
@@ -40,7 +40,7 @@ export const cartSlice = createSlice({
       state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
     },
 
-    minusItem(state, action:PayloadAction<string>) {
+    minusItem(state, action:PayloadAction<string>) { // потомучто id y нас string
       const findItem = state.items.find((obj) => obj.id === action.payload);
 
       if (findItem) {

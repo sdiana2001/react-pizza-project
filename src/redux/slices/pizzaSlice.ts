@@ -7,8 +7,8 @@ export type TPizzaItem = {
   title: string;
   price: number;
   imageUrl: string;
-  type: string[];
-  size: number[];
+  type: string;
+  size: number;
   rating: number;
 };
 
@@ -38,7 +38,7 @@ const initialState: IPizzaSliceState = {
 
 
 // First, create the thunk
-export const fetchPizzas = createAsyncThunk<TPizzaItem[], FetchPizzaParams>(
+export const fetchPizzas = createAsyncThunk<TPizzaItem[], FetchPizzaParams, { rejectValue: string }>(
   'pizza/fetchPizzaStatus',
   async ({ categoryQuery, sortQuery, searchProperty }, thunkAPI) => {
     try {
@@ -46,12 +46,12 @@ export const fetchPizzas = createAsyncThunk<TPizzaItem[], FetchPizzaParams>(
 
       const { data } = await axios.get<TPizzaItem[]>(
         `https://66a904f6e40d3aa6ff5a4dc3.mockapi.io/item?${queryString}`,
-        { signal: thunkAPI.signal }, // Отмена предыдущего запроса при частых кликах. Его задача обрывать прошлый не завершившийся запрос
+        { signal: thunkAPI.signal }, // signal в Axios избавляет приложение от лишней нагрузки и «гонки запросов» (race conditions).
       );
 
       return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data || 'Не удалось загрузить пиццы');
+      return thunkAPI.rejectWithValue('Не удалось загрузить пиццы');
     }
   },
 );
