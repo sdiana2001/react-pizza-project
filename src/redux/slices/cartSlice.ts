@@ -41,7 +41,8 @@ export const cartSlice = createSlice({
       state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
     },
 
-    minusItem(state, action:PayloadAction<string>) { // потомучто id y нас string
+    minusItem(state, action:PayloadAction<string>) {
+      // потомучто id y нас string
       const findItem = state.items.find((obj) => obj.id === action.payload);
 
       if (findItem) {
@@ -52,6 +53,9 @@ export const cartSlice = createSlice({
           state.items = state.items.filter((obj) => obj.id !== action.payload);
         }
       }
+      // Пересчитываем общую сумму и количество после уменьшения
+      state.totalCount = state.items.reduce((sum, obj) => obj.count + sum, 0);
+      state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
     },
 
     removeItem(state, action) {
