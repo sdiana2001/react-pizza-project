@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type TCartItem = {  // если нужно объединение видов 'a' | 'b', и описание структур данных  берем type
+export type TCartItem = {
+  // если нужно объединение видов 'a' | 'b', и описание структур данных  берем type
   id: string;
   title: string;
   price: number;

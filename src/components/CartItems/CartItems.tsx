@@ -8,16 +8,26 @@ type CartItemsProps = {
  imageUrl:string, 
  count:number, 
  type:string, 
- size: number
+ size: string
 }
 
 
 const CartItems = ({ id, title, price, imageUrl, count, type, size }:CartItemsProps) => {
   const dispatch = useDispatch();
 
-  const onClickPlus = () => {
-    dispatch(addItem({ id }));
-  };
+ const onClickPlus = () => {
+  dispatch(
+    addItem({
+      id,
+      title,
+      price,
+      imageUrl,
+      type,
+      size,
+      count,
+    })
+  );
+};
 
   const onClickMinus = () => {
     dispatch(minusItem(id));
